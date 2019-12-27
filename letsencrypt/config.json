@@ -60,5 +60,5 @@
       "sakuracloud_api_secret": "str?"
     }
   },
-  "image": "homeassistant/{arch}-addon-letsencrypt"
+  "image": "imduffy15/{arch}-addon-letsencrypt"
 }
