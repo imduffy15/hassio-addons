@@ -53,6 +53,9 @@ if bashio::config.exists 'dns.aws_access_key_id' && bashio::config.exists 'dns.a
 
     export AWS_ACCESS_KEY_ID
     export AWS_SECRET_ACCESS_KEY
+    PROVIDER_ARGUMENTS="--$DNS_PROVIDER"
+else
+    PROVIDER_ARGUMENTS="--$DNS_PROVIDER --${DNS_PROVIDER}-credentials /data/dnsapikey"
 fi
 
 # Generate new certs
@@ -64,7 +67,7 @@ if [ ! -d "$CERT_DIR/live" ]; then
 
     echo "$DOMAINS" > /data/domains.gen
     if [ "$CHALLENGE" == "dns" ]; then
-        certbot certonly --non-interactive --config-dir "$CERT_DIR" --work-dir "$WORK_DIR" "--$DNS_PROVIDER" "--${DNS_PROVIDER}-credentials" "/data/dnsapikey" --email "$EMAIL" --agree-tos --config-dir "$CERT_DIR" --work-dir "$WORK_DIR" --preferred-challenges "$CHALLENGE" "${DOMAIN_ARR[@]}"
+        certbot certonly --non-interactive --config-dir "$CERT_DIR" --work-dir "$WORK_DIR" $PROVIDER_ARGUMENTS --email "$EMAIL" --agree-tos --config-dir "$CERT_DIR" --work-dir "$WORK_DIR" --preferred-challenges "$CHALLENGE" "${DOMAIN_ARR[@]}"
     else
         certbot certonly --non-interactive --standalone --email "$EMAIL" --agree-tos --config-dir "$CERT_DIR" --work-dir "$WORK_DIR" --preferred-challenges "$CHALLENGE" "${DOMAIN_ARR[@]}"
     fi
